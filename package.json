@@ -1,0 +1,27 @@
+{
+  "name": "cms-assessment",
+  "version": "1.0.0",
+  "description": "Basic CMS - React, Node/Express, PostgreSQL, JWT, RBAC",
+  "private": true,
+  "scripts": {
+    "start": "node backend/src/server.js",
+    "dev": "node --watch backend/src/server.js",
+    "db:migrate": "sequelize-cli db:migrate --config backend/src/config/database.js --migrations-path backend/src/migrations",
+    "db:migrate:undo": "sequelize-cli db:migrate:undo --config backend/src/config/database.js --migrations-path backend/src/migrations",
+    "db:seed": "sequelize-cli db:seed:all --config backend/src/config/database.js --seeders-path backend/src/seeders",
+    "db:seed:undo": "sequelize-cli db:seed:undo --config backend/src/config/database.js --seeders-path backend/src/seeders"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.11.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.35.2"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.6.2"
+  }
+}
