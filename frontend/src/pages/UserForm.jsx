@@ -60,49 +60,94 @@ export function UserForm() {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div>
-      <h1>{isEdit ? 'Edit user' : 'New user'}</h1>
-      <form onSubmit={handleSubmit} style={{ maxWidth: 400, marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {error && <div style={{ color: '#c00' }}>{error}</div>}
-        <label style={labelStyle}>
-          Email
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required style={inputStyle} />
-        </label>
-        <label style={labelStyle}>
-          Password {isEdit && '(leave blank to keep current)'}
+    <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+      <div style={{ marginBottom: 'var(--space-8)' }}>
+        <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: 'var(--text-main)' }}>
+          {isEdit ? 'Edit User' : 'New User'}
+        </h1>
+        <p style={{ color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+          {isEdit ? 'Update existing user profile' : 'Create a new user in the system'}
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="card" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+        {error && (
+          <div style={{ padding: '0.75rem', background: '#fee2e2', color: 'var(--error)', borderRadius: 'var(--radius-md)', fontSize: '0.875rem' }}>
+            {error}
+          </div>
+        )}
+        
+        <div style={fieldGroupStyle}>
+          <label style={labelStyle}>Email Address</label>
+          <input 
+            type="email" 
+            className="input"
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+            required 
+            placeholder="email@example.com"
+          />
+        </div>
+
+        <div style={fieldGroupStyle}>
+          <label style={labelStyle}>
+            Password {isEdit && <span style={{ fontWeight: 400, color: 'var(--text-muted)' }}>(Optional)</span>}
+          </label>
           <input
             type="password"
+            className="input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required={!isEdit}
             minLength={6}
-            style={inputStyle}
+            placeholder={isEdit ? '••••••••' : 'Enter strong password'}
           />
-        </label>
-        <label style={labelStyle}>
-          Name
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} />
-        </label>
-        <label style={labelStyle}>
-          Role
-          <select value={roleId} onChange={(e) => setRoleId(Number(e.target.value))} style={inputStyle}>
+        </div>
+
+        <div style={fieldGroupStyle}>
+          <label style={labelStyle}>Full Name</label>
+          <input 
+            type="text" 
+            className="input"
+            value={name} 
+            onChange={(e) => setName(e.target.value)} 
+            placeholder="John Doe"
+          />
+        </div>
+
+        <div style={fieldGroupStyle}>
+          <label style={labelStyle}>Role Assignment</label>
+          <select 
+            className="input" 
+            value={roleId} 
+            onChange={(e) => setRoleId(Number(e.target.value))}
+            style={{ appearance: 'none', background: 'white url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%236b7280\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\' /%3E%3C/svg%3E") no-repeat right 0.75rem center / 1rem' }}
+          >
             {ROLE_OPTIONS.map((r) => (
               <option key={r.value} value={r.value}>{r.label}</option>
             ))}
           </select>
-        </label>
-        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
-          <button type="submit" disabled={submitting} style={submitStyle}>
-            {submitting ? 'Saving...' : isEdit ? 'Update' : 'Create'}
+        </div>
+
+        <div style={{ display: 'flex', gap: 'var(--space-3)', marginTop: 'var(--space-2)' }}>
+          <button type="submit" disabled={submitting} className="btn btn-primary" style={{ flex: 1 }}>
+            {submitting ? 'Saving...' : isEdit ? 'Update User' : 'Create User'}
           </button>
-          <Link to="/users" style={cancelStyle}>Cancel</Link>
+          <Link to="/users" className="btn" style={cancelButtonStyle}>
+            Cancel
+          </Link>
         </div>
       </form>
     </div>
   );
 }
 
-const labelStyle = { display: 'flex', flexDirection: 'column', gap: '0.25rem', fontWeight: 500 };
-const inputStyle = { padding: '0.5rem', fontSize: '1rem', border: '1px solid #ccc', borderRadius: 4 };
-const submitStyle = { padding: '0.6rem 1rem', cursor: 'pointer', background: '#333', color: '#fff', border: 'none', borderRadius: 4 };
-const cancelStyle = { padding: '0.6rem 1rem', color: '#666' };
+const fieldGroupStyle = { display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' };
+const labelStyle = { fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-main)' };
+const cancelButtonStyle = { 
+  background: 'transparent', 
+  border: '1px solid var(--border)',
+  color: 'var(--text-muted)',
+};
+
+// End of file

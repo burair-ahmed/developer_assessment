@@ -30,57 +30,72 @@ export function Login() {
 
   return (
     <div style={containerStyle}>
-      <h1 style={{ marginBottom: '1rem' }}>Login</h1>
-      <form onSubmit={handleSubmit} style={formStyle}>
-        {error && <div style={errorStyle}>{error}</div>}
-        <label style={labelStyle}>
-          Email
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            autoComplete="email"
-            style={inputStyle}
-          />
-        </label>
-        <label style={labelStyle}>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            autoComplete="current-password"
-            style={inputStyle}
-          />
-        </label>
-        <button type="submit" disabled={submitting} style={submitStyle}>
-          {submitting ? 'Signing in...' : 'Sign in'}
-        </button>
-        <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.9rem' }}>
+      <div className="card" style={{ width: '100%', maxWidth: '400px', padding: 'var(--space-8)' }}>
+        <div style={{ textAlign: 'center', marginBottom: 'var(--space-6)' }}>
+          <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: 'var(--text-main)' }}>Welcome back</h1>
+          <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem' }}>Please enter your details</p>
+        </div>
+        
+        <form onSubmit={handleSubmit} style={formStyle}>
+          {error && <div style={errorStyle}>{error}</div>}
+          <div style={fieldGroupStyle}>
+            <label style={labelStyle}>Email</label>
+            <input
+              type="email"
+              className="input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+              placeholder="name@company.com"
+            />
+          </div>
+          <div style={fieldGroupStyle}>
+            <label style={labelStyle}>Password</label>
+            <input
+              type="password"
+              className="input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              autoComplete="current-password"
+              placeholder="••••••••"
+            />
+          </div>
+          <button type="submit" disabled={submitting} className="btn btn-primary" style={submitStyle}>
+            {submitting ? 'Signing in...' : 'Sign in'}
+          </button>
+        </form>
+        
+        <div style={{ textAlign: 'center', marginTop: 'var(--space-6)', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
           Don't have an account?{' '}
-          <Link to="/register" style={{ color: '#333' }}>
-            Register
+          <Link to="/register" style={{ fontWeight: 600, color: 'var(--primary)' }}>
+            Create an account
           </Link>
         </div>
-      </form>
+      </div>
     </div>
   );
 }
 
-const containerStyle = { maxWidth: 360, margin: '2rem auto', padding: '1rem' };
-const formStyle = { display: 'flex', flexDirection: 'column', gap: '1rem' };
-const labelStyle = { display: 'flex', flexDirection: 'column', gap: '0.25rem', fontWeight: 500 };
-const inputStyle = { padding: '0.5rem', fontSize: '1rem', border: '1px solid #ccc', borderRadius: 4 };
-const submitStyle = {
-  padding: '0.6rem 1rem',
-  fontSize: '1rem',
-  cursor: 'pointer',
-  background: '#333',
-  color: '#fff',
-  border: 'none',
-  borderRadius: 4,
-  marginTop: '0.5rem',
+const containerStyle = { 
+  minHeight: '100vh',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: 'var(--space-4)',
+  background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
 };
-const errorStyle = { color: '#c00', fontSize: '0.9rem' };
+
+const formStyle = { display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' };
+const fieldGroupStyle = { display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' };
+const labelStyle = { fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-main)' };
+const submitStyle = { width: '100%', padding: '0.75rem', marginTop: 'var(--space-2)' };
+const errorStyle = { 
+  padding: '0.75rem', 
+  background: '#fee2e2', 
+  color: 'var(--error)', 
+  borderRadius: 'var(--radius-md)',
+  fontSize: '0.875rem',
+  textAlign: 'center'
+};

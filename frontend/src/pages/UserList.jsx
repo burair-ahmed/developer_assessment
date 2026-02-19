@@ -44,69 +44,137 @@ export function UserList() {
   const totalPages = data.pagination?.totalPages ?? 1;
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <h1>Users</h1>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: 'var(--text-main)' }}>Users</h1>
+          <p style={{ color: 'var(--text-muted)', marginTop: '0.25rem' }}>Manage and monitor application users</p>
+        </div>
         {isAdmin && (
-          <Link to="/users/new" style={buttonLinkStyle}>Add user</Link>
+          <Link to="/users/new" className="btn btn-primary">
+            <span style={{ marginRight: '0.5rem' }}>+</span> Add User
+          </Link>
         )}
       </div>
-      {error && <div style={{ color: '#c00', marginBottom: '0.5rem' }}>{error}</div>}
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-          <table style={tableStyle}>
-            <thead>
-              <tr>
-                <th style={thStyle}>ID</th>
-                <th style={thStyle}>Email</th>
-                <th style={thStyle}>Name</th>
-                <th style={thStyle}>Role</th>
-                {isAdmin && <th style={thStyle}>Actions</th>}
-              </tr>
-            </thead>
-            <tbody>
-              {data.users.map((u) => (
-                <tr key={u.id}>
-                  <td style={tdStyle}>{u.id}</td>
-                  <td style={tdStyle}>{u.email}</td>
-                  <td style={tdStyle}>{u.name || '—'}</td>
-                  <td style={tdStyle}>{u.role}</td>
-                  {isAdmin && (
-                    <td style={tdStyle}>
-                      <Link to={`/users/${u.id}/edit`} style={linkStyle}>Edit</Link>
-                      {' · '}
-                      <button type="button" onClick={() => handleDelete(u.id, u.email)} style={textButtonStyle}>
-                        Delete
-                      </button>
-                    </td>
-                  )}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {totalPages > 1 && (
-            <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <button type="button" disabled={page <= 1} onClick={() => setPage((p) => p - 1)} style={pageBtnStyle}>
-                Previous
-              </button>
-              <span>Page {page} of {totalPages}</span>
-              <button type="button" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)} style={pageBtnStyle}>
-                Next
-              </button>
-            </div>
-          )}
-        </>
+
+      {error && (
+        <div style={{ padding: '0.75rem 1rem', background: '#fee2e2', color: 'var(--error)', borderRadius: 'var(--radius-md)', fontSize: '0.875rem' }}>
+          {error}
+        </div>
       )}
+
+      <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+        {loading ? (
+          <div style={{ padding: 'var(--space-8)', textAlign: 'center', color: 'var(--text-muted)' }}>
+            Loading users...
+          </div>
+        ) : (
+          <>
+            <div style={{ overflowX: 'auto' }}>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Name</th>
+                    <th>Role</th>
+                    {isAdmin && <th style={{ textAlign: 'right' }}>Actions</th>}
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.users.map((u) => (
+                    <tr key={u.id}>
+                      <td style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>#{u.id}</td>
+                      <td style={{ fontWeight: 500 }}>{u.email}</td>
+                      <td>{u.name || <span style={{ color: '#ccc' }}>—</span>}</td>
+                      <td>
+                        <span style={roleBadgeStyle(u.role)}>
+                          {u.role}
+                        </span>
+                      </td>
+                      {isAdmin && (
+                        <td style={{ textAlign: 'right' }}>
+                          <div style={{ display: 'inline-flex', gap: 'var(--space-2)' }}>
+                            <Link to={`/users/${u.id}/edit`} style={actionIconStyle}>
+                              Edit
+                            </Link>
+                            <button type="button" onClick={() => handleDelete(u.id, u.email)} style={deleteButtonStyle}>
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {totalPages > 1 && (
+              <div style={paginationWrapperStyle}>
+                <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                  Page <span style={{ fontWeight: 600, color: 'var(--text-main)' }}>{page}</span> of {totalPages}
+                </div>
+                <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+                  <button type="button" disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="btn" style={pageBtnStyle}>
+                    Previous
+                  </button>
+                  <button type="button" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)} className="btn" style={pageBtnStyle}>
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }
 
-const tableStyle = { width: '100%', borderCollapse: 'collapse' };
-const thStyle = { textAlign: 'left', padding: '0.5rem', borderBottom: '2px solid #ddd' };
-const tdStyle = { padding: '0.5rem', borderBottom: '1px solid #eee' };
-const linkStyle = { color: '#333' };
-const textButtonStyle = { background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#c00', textDecoration: 'underline' };
-const buttonLinkStyle = { padding: '0.5rem 1rem', background: '#333', color: '#fff', textDecoration: 'none', borderRadius: 4 };
-const pageBtnStyle = { padding: '0.4rem 0.75rem', cursor: 'pointer' };
+const roleBadgeStyle = (role) => ({
+  display: 'inline-flex',
+  padding: '0.125rem 0.625rem',
+  fontSize: '0.75rem',
+  fontWeight: 600,
+  borderRadius: 'var(--radius-full)',
+  textTransform: 'uppercase',
+  backgroundColor: role === 'admin' ? '#e0e7ff' : '#f3f4f6',
+  color: role === 'admin' ? '#4338ca' : '#374151',
+});
+
+const actionIconStyle = {
+  fontSize: '0.875rem',
+  fontWeight: 500,
+  color: 'var(--primary)',
+  padding: '0.25rem 0.5rem',
+  borderRadius: 'var(--radius-md)',
+  transition: 'background 0.15s ease',
+};
+
+const deleteButtonStyle = {
+  background: 'none',
+  border: 'none',
+  fontSize: '0.875rem',
+  fontWeight: 500,
+  color: 'var(--error)',
+  padding: '0.25rem 0.5rem',
+  borderRadius: 'var(--radius-md)',
+};
+
+const paginationWrapperStyle = {
+  padding: 'var(--space-4) var(--space-6)',
+  borderTop: '1px solid var(--border)',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  background: '#fafafa',
+};
+
+const pageBtnStyle = {
+  padding: '0.4rem 0.75rem',
+  fontSize: '0.875rem',
+  background: '#white',
+  border: '1px solid var(--border)',
+};
+
+// End of file

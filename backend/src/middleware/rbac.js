@@ -22,22 +22,33 @@ function requirePermission(permissionName) {
     }
 
     try {
+      // Use the plural of the model name for the association
       const role = await Role.findOne({
         where: { name: req.user.role },
-        include: [{ association: 'Permissions', attributes: ['name'] }],
+        include: [{ 
+          association: 'Permissions', 
+          attributes: ['code', 'name'],
+          through: { attributes: [] } 
+        }],
       });
 
       if (!role) {
-        return res.status(403).json({ error: 'Forbidden' });
+        console.error(`[RBAC] Role not found: ${req.user.role}`);
+        return res.status(403).json({ error: 'Forbidden: Role not found' });
       }
 
-      const permissionCodes = (role.Permissions || []).map((p) => p.code);
+      const permissions = role.Permissions || [];
+      const permissionCodes = permissions.map((p) => p.code);
+      
+      console.log(`[RBAC] User: ${req.user.id}, Role: ${req.user.role}, Required: ${permissionName}, Has: ${permissionCodes.join(', ')}`);
+
       if (!permissionCodes.includes(permissionName)) {
-        return res.status(403).json({ error: 'Forbidden' });
+        return res.status(403).json({ error: 'Forbidden: Missing permission' });
       }
 
       next();
     } catch (err) {
+      console.error('[RBAC] Error:', err);
       next(err);
     }
   };
