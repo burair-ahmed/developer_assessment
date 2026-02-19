@@ -22,7 +22,8 @@ export function Register() {
       navigate('/', { replace: true });
     } catch (err) {
       const errorData = err.response?.data?.error || 'Registration failed';
-      setError(typeof errorData === 'object' ? (errorData.message || JSON.stringify(errorData)) : errorData);
+      // Ensure errorData is a string before setting state to prevent React Error #31 if rendered directly
+      setError(typeof errorData === 'object' ? (errorData.message || JSON.stringify(errorData)) : String(errorData));
     } finally {
       setSubmitting(false);
     }
