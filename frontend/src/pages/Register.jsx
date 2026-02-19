@@ -1,28 +1,27 @@
 import { useState } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
-import { login as apiLogin } from '../api/auth.js';
+import { register as apiRegister } from '../api/auth.js';
 
-export function Login() {
+export function Register() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || '/';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSubmitting(true);
     try {
-      const { token, user: userData } = await apiLogin(email.trim(), password);
+      const { token, user: userData } = await apiRegister(name.trim(), email.trim(), password);
       login(token, userData);
-      navigate(from, { replace: true });
+      navigate('/', { replace: true });
     } catch (err) {
-      setError(err.response?.data?.error || 'Login failed');
+      setError(err.response?.data?.error || 'Registration failed');
     } finally {
       setSubmitting(false);
     }
@@ -30,9 +29,20 @@ export function Login() {
 
   return (
     <div style={containerStyle}>
-      <h1 style={{ marginBottom: '1rem' }}>Login</h1>
+      <h1 style={{ marginBottom: '1rem' }}>Create Account</h1>
       <form onSubmit={handleSubmit} style={formStyle}>
         {error && <div style={errorStyle}>{error}</div>}
+        <label style={labelStyle}>
+          Full Name
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            autoComplete="name"
+            style={inputStyle}
+          />
+        </label>
         <label style={labelStyle}>
           Email
           <input
@@ -51,17 +61,17 @@ export function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            autoComplete="current-password"
+            autoComplete="new-password"
             style={inputStyle}
           />
         </label>
         <button type="submit" disabled={submitting} style={submitStyle}>
-          {submitting ? 'Signing in...' : 'Sign in'}
+          {submitting ? 'Creating account...' : 'Sign up'}
         </button>
         <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.9rem' }}>
-          Don't have an account?{' '}
-          <Link to="/register" style={{ color: '#333' }}>
-            Register
+          Already have an account?{' '}
+          <Link to="/login" style={{ color: '#333' }}>
+            Login
           </Link>
         </div>
       </form>

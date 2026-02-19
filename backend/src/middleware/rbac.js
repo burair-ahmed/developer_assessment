@@ -31,8 +31,8 @@ function requirePermission(permissionName) {
         return res.status(403).json({ error: 'Forbidden' });
       }
 
-      const permissionNames = (role.Permissions || []).map((p) => p.name);
-      if (!permissionNames.includes(permissionName)) {
+      const permissionCodes = (role.Permissions || []).map((p) => p.code);
+      if (!permissionCodes.includes(permissionName)) {
         return res.status(403).json({ error: 'Forbidden' });
       }
 

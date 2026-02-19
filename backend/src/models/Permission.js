@@ -15,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
   Permission.init(
     {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-      name: { type: DataTypes.STRING(100), allowNull: false, unique: true },
+      code: { type: DataTypes.STRING(100), allowNull: false, unique: true },
+      name: { type: DataTypes.STRING(100), allowNull: false },
     },
     {
       sequelize,
