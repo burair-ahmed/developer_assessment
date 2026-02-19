@@ -1,6 +1,7 @@
 'use strict';
 
 const Sequelize = require('sequelize');
+const pg = require('pg'); // Explicitly require pg for Vercel/Serverless bundling
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/database.js')[env];
 const db = {};
