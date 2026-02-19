@@ -21,7 +21,8 @@ export function Register() {
       login(token, userData);
       navigate('/', { replace: true });
     } catch (err) {
-      setError(err.response?.data?.error || 'Registration failed');
+      const errorData = err.response?.data?.error || 'Registration failed';
+      setError(typeof errorData === 'object' ? (errorData.message || JSON.stringify(errorData)) : errorData);
     } finally {
       setSubmitting(false);
     }

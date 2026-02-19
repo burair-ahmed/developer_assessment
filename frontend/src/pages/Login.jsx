@@ -22,7 +22,8 @@ export function Login() {
       login(token, userData);
       navigate(from, { replace: true });
     } catch (err) {
-      setError(err.response?.data?.error || 'Login failed');
+      const errorData = err.response?.data?.error || 'Login failed';
+      setError(typeof errorData === 'object' ? (errorData.message || JSON.stringify(errorData)) : errorData);
     } finally {
       setSubmitting(false);
     }
