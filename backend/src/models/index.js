@@ -1,11 +1,8 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
 const Sequelize = require('sequelize');
-const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(path.join(__dirname, '../config/database.js'))[env];
+const config = require('../config/database.js')[env];
 const db = {};
 
 let sequelize;
@@ -15,15 +12,17 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-fs.readdirSync(__dirname)
-  .filter((file) => file !== basename && file.endsWith('.js'))
-  .forEach((file) => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
+// Explicitly import models for Vercel/Serverless compatibility
+// This avoids issues with fs.readdirSync during bundling
+db.Role = require('./Role')(sequelize, Sequelize.DataTypes);
+db.Permission = require('./Permission')(sequelize, Sequelize.DataTypes);
+db.User = require('./User')(sequelize, Sequelize.DataTypes);
 
+// Register associations
 Object.keys(db).forEach((modelName) => {
-  if (db[modelName].associate) db[modelName].associate(db);
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
 });
 
 db.sequelize = sequelize;
