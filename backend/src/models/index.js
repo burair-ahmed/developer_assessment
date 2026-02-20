@@ -8,7 +8,11 @@ const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], { ...config, logging: config.logging });
+  const dbUrl = process.env[config.use_env_variable];
+  if (!dbUrl) {
+    throw new Error(`Environment variable "${config.use_env_variable}" is not defined. Please check your Railway environment variables.`);
+  }
+  sequelize = new Sequelize(dbUrl, { ...config, logging: config.logging });
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
