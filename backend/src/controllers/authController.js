@@ -129,7 +129,7 @@ async function forgotPassword(req, res, next) {
       resetPasswordExpires: expiry,
     });
 
-    const resetUrl = `http://localhost:5173/reset-password/${token}`;
+    const resetUrl = `/reset-password/${token}`;
 
     try {
       await sendResetEmail(user.email, resetUrl);
