@@ -15,6 +15,8 @@ module.exports = (sequelize, DataTypes) => {
       passwordHash: { type: DataTypes.STRING(255), allowNull: false, field: 'password_hash' },
       name: { type: DataTypes.STRING(255), allowNull: true },
       roleId: { type: DataTypes.INTEGER, allowNull: false, field: 'role_id' },
+      resetPasswordToken: { type: DataTypes.STRING(255), allowNull: true, field: 'reset_password_token' },
+      resetPasswordExpires: { type: DataTypes.DATE, allowNull: true, field: 'reset_password_expires' },
     },
     {
       sequelize,
