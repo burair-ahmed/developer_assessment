@@ -129,7 +129,7 @@ async function forgotPassword(req, res, next) {
       resetPasswordExpires: expiry,
     });
 
-    const resetUrl = `/reset-password/${token}`;
+    const resetUrl = `https://developer-assessment-ten.vercel.app/reset-password/${token}`;
 
     try {
       await sendResetEmail(user.email, resetUrl);
